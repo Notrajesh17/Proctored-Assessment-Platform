@@ -85,6 +85,23 @@ textarea { min-height: 90px; resize: vertical; }
 .hint { margin-top: 20px; color: var(--muted); font-size: 14px; }
 .error { color: var(--danger); }
 .notice { background: #eef6f2; padding: 8px 12px; border-radius: 4px; }
+.toast-notice {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 12px 18px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  animation: toast-in 160ms ease-out;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .muted { color: var(--muted); }
 .steps { padding-left: 1.2rem; margin: 0 0 16px; }
 
@@ -190,6 +207,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
 .score-big { font-size: 42px; margin: 8px 0; }
 
 @media (max-width: 640px) {
+  .toast-notice { top: 12px; right: 10px; left: 10px; max-width: none; }
   .shell { width: min(100% - 20px, 920px); margin-top: 12px; }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .topbar, .row-between { align-items: flex-start; flex-wrap: wrap; }

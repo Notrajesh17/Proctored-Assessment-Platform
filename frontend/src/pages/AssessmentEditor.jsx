@@ -177,6 +177,12 @@ export default function AssessmentEditor() {
     }
   }, [id])
 
+  useEffect(() => {
+    if (!msg) return undefined
+    const timer = window.setTimeout(() => setMsg(''), 2000)
+    return () => window.clearTimeout(timer)
+  }, [msg])
+
   function startAction(name) {
     setBusy(name)
     setError('')
@@ -206,9 +212,14 @@ export default function AssessmentEditor() {
     event.preventDefault()
     startAction('settings')
     try {
-      await patchPaper()
+      const updated = await patchPaper()
+      setPaper((current) => ({
+        ...current,
+        ...updated,
+        questions: current.questions,
+        locked: current.locked,
+      }))
       setMsg('Assessment settings saved.')
-      await load()
     } catch (err) {
       setError(err.message)
     } finally {
@@ -237,13 +248,16 @@ export default function AssessmentEditor() {
     event.preventDefault()
     startAction('add-question')
     try {
-      await api(`/api/assessments/${id}/questions`, {
+      const created = await api(`/api/assessments/${id}/questions`, {
         method: 'POST',
         body: questionBody(draft),
       })
+      setPaper((current) => ({
+        ...current,
+        questions: [...(current.questions || []), created],
+      }))
       setDraft(blankQuestion())
       setMsg('Question added.')
-      await load()
     } catch (err) {
       setError(err.message)
     } finally {
@@ -362,7 +376,7 @@ export default function AssessmentEditor() {
         <h1>{paper.title}</h1>
         <Link className="btn" to={`/admin/papers/${id}/submissions`}>Submissions</Link>
       </div>
-      {msg && <p className="notice" role="status">{msg}</p>}
+      {msg && <div className="toast-notice" role="status" aria-live="polite">{msg}</div>}
       {error && <p className="error" role="alert">{error}</p>}
       {locked && (
         <p className="notice">
