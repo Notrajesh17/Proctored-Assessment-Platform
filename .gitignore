@@ -1,0 +1,20 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules
+
+# Build
+dist
+coverage
+
+# Env
+backend/.env
+
+# OS / editor
+.DS_Store
+.idea
+.vscode
+*.swp
